@@ -2,10 +2,12 @@ package com.gamebasic.game.controller;
 
 import com.gamebasic.game.dto.CreateRequest;
 import com.gamebasic.game.dto.GameDetailResponse;
+import com.gamebasic.game.dto.GameSummaryResponse;
 import com.gamebasic.game.dto.ProgressRequest;
 import com.gamebasic.game.service.GameService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +20,15 @@ public class GameController {
     private final GameService gameService;
 
     @GetMapping("/games")
-    public ResponseEntity<List<Object>> getGames() {
-        // List<Object>는 임시 구현이며, Lv 7에서 제대로 고칩니다.
-        // List.of()는 빈 목록을 돌려주는 임시 구현이며, Lv 7에서 제대로 고칩니다.
-        return ResponseEntity.ok(List.of());
+    public ResponseEntity<List<GameSummaryResponse>> getGames() {
+        return ResponseEntity.ok(gameService.getGames());
     }
+
+    @GetMapping("/games{gameId}")
+    public ResponseEntity<GameDetailResponse> getGame(@PathVariable Long gameId){
+        return ResponseEntity.ok(gameService.getGame(gameId));
+    }
+
 
     @PostMapping("/games")
     public ResponseEntity<GameDetailResponse> createGame(@Valid @RequestBody CreateRequest request) {
